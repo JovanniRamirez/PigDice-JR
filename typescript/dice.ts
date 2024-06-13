@@ -1,3 +1,74 @@
+class Player {
+    name: string;
+    score: number;
+    
+    constructor(name: string) {
+        this.name = name;
+        this.score = 0;
+    }
+}
+
+class Game {
+    players: Player[];
+    activePlayerIndex: number;
+    roundScore: number;
+    gamePlaying: boolean;
+
+    /**
+     * 
+     * @param player1Name 
+     * @param player2Name 
+     */
+    constructor(player1Name: string, player2Name: string){
+        this.players = [new Player(player1Name), new Player(player2Name)];
+        this.activePlayerIndex = 0;
+        this.roundScore = 0;
+        this.gamePlaying = true;
+    }
+
+    generateRandomValue(minValue: number, maxValue: number): number{
+        return Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+    }
+
+    changePlayers(): void{
+        //If the active player is Player 1 (index 0)
+        if (this.activePlayerIndex === 0) {
+            //change the active player to Player 2
+            this.activePlayerIndex = 1;
+        }
+        else {
+            //If the active player is Player 2 (index 1)
+            this.activePlayerIndex = 0;
+        }
+        //Reset the round score to 0
+        this.roundScore = 0;
+    }
+
+    rollDie(): void {
+        if (this.gamePlaying) {
+            let dice = this.generateRandomValue(1, 6);
+            if (dice != 1) {
+                this.roundScore += dice;
+            }
+            else {
+                this.changePlayers();
+            }
+        }
+    }
+
+    holdDie(): void {
+        if (this.gamePlaying) {
+            this.players[this.activePlayerIndex].score += this.roundScore;
+            if (this.players[this.activePlayerIndex].score >= 100) {
+                this.gamePlaying = false;
+            }
+            else {
+                this.changePlayers();
+            }
+        }
+    }
+}
+
 function generateRandomValue(minValue:number, maxValue:number):number{
     var random = Math.random();
     
