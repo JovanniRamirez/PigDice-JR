@@ -1,3 +1,5 @@
+const WINNING_SCORE = 100;
+
 class Player {
     name: string;
     score: number;
@@ -62,7 +64,7 @@ class Game {
         if (this.gamePlaying) {
             this.players[this.activePlayerIndex].score += this.roundScore;
             
-            if (this.players[this.activePlayerIndex].score >= 100) {
+            if (this.players[this.activePlayerIndex].score >= WINNING_SCORE) {
                 this.gamePlaying = false;
                 this.gameWinner();
             }
@@ -70,7 +72,7 @@ class Game {
     }
 
     gameWinner(): string {
-        if (this.players[this.activePlayerIndex].score >= 100 && this.gamePlaying == false) {
+        if (this.players[this.activePlayerIndex].score >= WINNING_SCORE && this.gamePlaying == false) {
             return `${this.players[this.activePlayerIndex].name} is the winner. Game Over.`;
         }
         return "";
@@ -120,18 +122,56 @@ function createNewGame(){
     
     else {
         //Display Error
+        alert("Must enter both player names!")
     }
 }
 
 function rollDie():void{
-    
+
     game.rollDie();
     let currDice = game.currDice;
     let total = game.roundScore;
+    
     (<HTMLInputElement>document.getElementById("die")).value = currDice.toString();
     (<HTMLInputElement>document.getElementById("total")).value = total.toString();
+    
     updateCurrentPlayerName(); 
+
+    // Update the die animation
+    
+    
+    let dots = getDotsPositions(currDice); // Get positions for the new roll
+    
+    drawDieFace(dots);
 }
+
+function drawDieFace(dots: any) {
+    let dieAnimation = document.getElementById("die-animation");
+    dieAnimation.innerHTML = '';
+
+    dots.forEach(position => {
+        let dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.top = position.top + '%';
+        dot.style.left = position.left + '%';
+        dieAnimation.appendChild(dot);
+    });
+}
+
+// Function to get the positions of the dots based on the roll
+function getDotsPositions(roll) {
+    // Define positions for each possible roll
+    const positions = {
+        1: [{ top: 40, left: 40 }],
+        2: [{ top: 15, left: 15 }, { top: 65, left: 65 }],
+        3: [{ top: 15, left: 15 }, { top: 40, left: 40 }, { top: 65, left: 65 }],
+        4: [{ top: 15, left: 15 }, { top: 15, left: 65 }, { top: 65, left: 15 }, { top: 65, left: 65 }],
+        5: [{ top: 15, left: 15 }, { top: 15, left: 65 }, { top: 40, left: 40 }, { top: 65, left: 15 }, { top: 65, left: 65 }],
+        6: [{ top: 15, left: 15 }, { top: 15, left: 40 }, { top: 15, left: 65 }, { top: 65, left: 15 }, { top: 65, left: 40 }, { top: 65, left: 65 }]
+    };
+    return positions[roll];
+}
+
 
 function holdDie():void{
     
@@ -187,4 +227,5 @@ function resetGame() {
     (<HTMLElement>document.getElementById("turn")).classList.remove("open");
 
     game.gamePlaying = true;
+    drawDieFace(1);
 }
