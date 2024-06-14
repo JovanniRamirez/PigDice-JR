@@ -43,3 +43,33 @@ fieldset {
 #hold {
     margin-right: 2em;
 }
+
+/**Die Animation css**/
+#die-animation {
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border: 1px solid black;
+    position: relative;
+    animation: spin 1s ease-out;
+    border-radius: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    padding: 5px;
+}
+
+.dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    margin: 2px;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
