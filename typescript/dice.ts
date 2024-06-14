@@ -70,7 +70,6 @@ class Game {
 }
 
 let game: Game;
-let player: Player;
 
 window.onload = function(){
     let newGameBtn = document.getElementById("new_game") as HTMLButtonElement;
@@ -100,9 +99,7 @@ function createNewGame(){
         (<HTMLInputElement>document.getElementById("player2")).setAttribute("disabled", "disabled");
         
         //Update the current player's name in the span
-        let currentPlayerSpan = document.getElementById("current") as HTMLElement;
-        currentPlayerSpan.innerText = game.players[game.activePlayerIndex].name;
-
+        updateCurrentPlayerName();
         
         if (!game.gamePlaying) {
             (<HTMLInputElement>document.getElementById("player1")).removeAttribute("disabled");
@@ -141,4 +138,14 @@ function holdDie():void{
     (<HTMLInputElement>document.getElementById("die")).value = "0";
     //change players
     game.changePlayers();
+    updateCurrentPlayerName();
+}
+
+function updateCurrentPlayerName(): void {
+    // Get the current player's name
+    let currentPlayerName = game.players[game.activePlayerIndex].name;
+
+    // Update the current player's name in the span
+    let currentPlayerSpan = document.getElementById("current") as HTMLElement;
+    currentPlayerSpan.innerText = currentPlayerName;
 }

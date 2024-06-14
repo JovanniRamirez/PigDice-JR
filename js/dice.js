@@ -45,7 +45,6 @@ class Game {
     }
 }
 let game;
-let player;
 window.onload = function () {
     let newGameBtn = document.getElementById("new_game");
     newGameBtn.onclick = createNewGame;
@@ -61,8 +60,7 @@ function createNewGame() {
         document.getElementById("total").value = "0";
         document.getElementById("player1").setAttribute("disabled", "disabled");
         document.getElementById("player2").setAttribute("disabled", "disabled");
-        let currentPlayerSpan = document.getElementById("current");
-        currentPlayerSpan.innerText = game.players[game.activePlayerIndex].name;
+        updateCurrentPlayerName();
         if (!game.gamePlaying) {
             document.getElementById("player1").removeAttribute("disabled");
             document.getElementById("player2").removeAttribute("disabled");
@@ -87,4 +85,10 @@ function holdDie() {
     document.getElementById("total").value = "0";
     document.getElementById("die").value = "0";
     game.changePlayers();
+    updateCurrentPlayerName();
+}
+function updateCurrentPlayerName() {
+    let currentPlayerName = game.players[game.activePlayerIndex].name;
+    let currentPlayerSpan = document.getElementById("current");
+    currentPlayerSpan.innerText = currentPlayerName;
 }
