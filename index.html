@@ -24,6 +24,7 @@
             
             <label for="score1">Score</label>
             <input type="text" id="score1" value="0" disabled>
+            <input type="button" id="reset" value="Reset Game" style="width: auto;">
             <br>
             
             <label for="player2">Player 2</label>
@@ -32,11 +33,11 @@
             <label for="score2">Score</label>
             <input type="text" id="score2" value="0" disabled>
             
-            <input type="button" id="new_game" value="New Game">
+            <input type="button" id="new_game" value="Play Game">
             <br>
             
         <section id="turn">
-            <p><span id="current">&nbsp;</span>'s turn</p>
+            <p><span id="current">&nbsp;</span>'s turn</p><p><span id="winner"></span></p>
             
             <input type="button" id="roll" value="Roll">
             <input type="button" id="hold" value="Hold">
