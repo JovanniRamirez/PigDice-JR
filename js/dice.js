@@ -3,6 +3,9 @@ class Player {
         this.name = name;
         this.score = 0;
     }
+    getScore() {
+        return this.score;
+    }
 }
 class Game {
     constructor(player1Name, player2Name) {
@@ -26,9 +29,9 @@ class Game {
     rollDie() {
         if (this.gamePlaying) {
             let dice = this.generateRandomValue(1, 6);
+            this.currDice = dice;
             if (dice != 1) {
                 this.roundScore += dice;
-                this.updateRoundScoreUI();
             }
             else {
                 this.changePlayers();
@@ -41,15 +44,18 @@ class Game {
             if (this.players[this.activePlayerIndex].score >= 100) {
                 this.gamePlaying = false;
             }
-            else {
-                this.changePlayers();
-            }
         }
     }
     updateRoundScoreUI() {
+        document.getElementById("total").value = this.roundScore.toString();
+    }
+    updateTotalScoreUI() {
+        document.getElementById("score" + (this.activePlayerIndex + 1)).value =
+            this.players[this.activePlayerIndex].score.toString();
     }
 }
 let game;
+let player;
 window.onload = function () {
     let newGameBtn = document.getElementById("new_game");
     newGameBtn.onclick = createNewGame;
@@ -67,15 +73,25 @@ function createNewGame() {
         document.getElementById("player2").setAttribute("disabled", "disabled");
         let currentPlayerSpan = document.getElementById("current");
         currentPlayerSpan.innerText = game.players[game.activePlayerIndex].name;
+        if (!game.gamePlaying) {
+            document.getElementById("player1").removeAttribute("disabled");
+            document.getElementById("player2").removeAttribute("disabled");
+        }
     }
     else {
     }
 }
 function rollDie() {
     game.rollDie();
-    let currTotal = game.roundScore;
-    document.getElementById("total").value = currTotal.toString();
+    let currDice = game.currDice;
+    let total = game.roundScore;
+    document.getElementById("die").value = currDice.toString();
+    document.getElementById("total").value = total.toString();
 }
 function holdDie() {
     game.holdDie();
+    let currTotal = game.roundScore;
+    let currPlayer = game.activePlayerIndex;
+    let playerScoreId = document.getElementById("score" + (currPlayer + 1)).value;
+    playerScoreId = player.score.toString();
 }

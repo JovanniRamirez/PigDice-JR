@@ -6,11 +6,16 @@ class Player {
         this.name = name;
         this.score = 0;
     }
+
+    getScore(){
+        return this.score;
+    }
 }
 
 class Game {
     players: Player[];
     activePlayerIndex: number;
+    currDice: number;
     roundScore: number;
     gamePlaying: boolean;
 
@@ -49,9 +54,9 @@ class Game {
     rollDie(): void {
         if (this.gamePlaying) {
             let dice = this.generateRandomValue(1, 6);
+            this.currDice = dice;
             if (dice != 1) {
                 this.roundScore += dice;
-                this.updateRoundScoreUI();
             }
             else {
                 this.changePlayers();
@@ -62,22 +67,25 @@ class Game {
     holdDie(): void {
         if (this.gamePlaying) {
             this.players[this.activePlayerIndex].score += this.roundScore;
+            
             if (this.players[this.activePlayerIndex].score >= 100) {
                 this.gamePlaying = false;
-            }
-            else {
-                this.changePlayers();
             }
         }
     }
 
-
     updateRoundScoreUI(): void{
-        
+        (<HTMLInputElement>document.getElementById("total")).value = this.roundScore.toString();
+    }
+
+    updateTotalScoreUI(): void{
+        (<HTMLInputElement>document.getElementById("score" + (this.activePlayerIndex + 1))).value =
+            this.players[this.activePlayerIndex].score.toString();
     }
 }
 
 let game: Game;
+let player: Player;
 
 window.onload = function(){
     let newGameBtn = document.getElementById("new_game") as HTMLButtonElement;
@@ -109,7 +117,14 @@ function createNewGame(){
         //Update the current player's name in the span
         let currentPlayerSpan = document.getElementById("current") as HTMLElement;
         currentPlayerSpan.innerText = game.players[game.activePlayerIndex].name;
+
+        
+        if (!game.gamePlaying) {
+            (<HTMLInputElement>document.getElementById("player1")).removeAttribute("disabled");
+            (<HTMLInputElement>document.getElementById("player2")).removeAttribute("disabled");
+        }
     }
+    
     else {
         //Display Error
     }
@@ -118,18 +133,24 @@ function createNewGame(){
 function rollDie():void{
     
     game.rollDie();
-
-    let currTotal = game.roundScore;
-
-    (<HTMLInputElement>document.getElementById("total")).value = currTotal.toString();
+    let currDice = game.currDice;
+    let total = game.roundScore;
+    (<HTMLInputElement>document.getElementById("die")).value = currDice.toString();
+    (<HTMLInputElement>document.getElementById("total")).value = total.toString();
 }
 
 function holdDie():void{
+    
     game.holdDie();
     //get the current turn total
-    //determine who the current player is
-    //add the current turn total to the player's total score
+    let currTotal = game.roundScore;
 
+    //determine who the current player is
+    let currPlayer = game.activePlayerIndex;
+    
+    //add the current turn total to the player's total score
+    let playerScoreId = (<HTMLInputElement>document.getElementById("score" + (currPlayer + 1))).value
+    playerScoreId = player.score.toString();
     //reset the turn total to 0
 
     //change players
