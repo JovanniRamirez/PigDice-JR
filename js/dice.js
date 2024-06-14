@@ -1,3 +1,4 @@
+const WINNING_SCORE = 100;
 class Player {
     constructor(name) {
         this.name = name;
@@ -38,14 +39,14 @@ class Game {
     holdDie() {
         if (this.gamePlaying) {
             this.players[this.activePlayerIndex].score += this.roundScore;
-            if (this.players[this.activePlayerIndex].score >= 100) {
+            if (this.players[this.activePlayerIndex].score >= WINNING_SCORE) {
                 this.gamePlaying = false;
                 this.gameWinner();
             }
         }
     }
     gameWinner() {
-        if (this.players[this.activePlayerIndex].score >= 100 && this.gamePlaying == false) {
+        if (this.players[this.activePlayerIndex].score >= WINNING_SCORE && this.gamePlaying == false) {
             return `${this.players[this.activePlayerIndex].name} is the winner. Game Over.`;
         }
         return "";
@@ -76,6 +77,7 @@ function createNewGame() {
         }
     }
     else {
+        alert("Must enter both player names!");
     }
 }
 function rollDie() {
@@ -85,6 +87,30 @@ function rollDie() {
     document.getElementById("die").value = currDice.toString();
     document.getElementById("total").value = total.toString();
     updateCurrentPlayerName();
+    let dots = getDotsPositions(currDice);
+    drawDieFace(dots);
+}
+function drawDieFace(dots) {
+    let dieAnimation = document.getElementById("die-animation");
+    dieAnimation.innerHTML = '';
+    dots.forEach(position => {
+        let dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.top = position.top + '%';
+        dot.style.left = position.left + '%';
+        dieAnimation.appendChild(dot);
+    });
+}
+function getDotsPositions(roll) {
+    const positions = {
+        1: [{ top: 40, left: 40 }],
+        2: [{ top: 15, left: 15 }, { top: 65, left: 65 }],
+        3: [{ top: 15, left: 15 }, { top: 40, left: 40 }, { top: 65, left: 65 }],
+        4: [{ top: 15, left: 15 }, { top: 15, left: 65 }, { top: 65, left: 15 }, { top: 65, left: 65 }],
+        5: [{ top: 15, left: 15 }, { top: 15, left: 65 }, { top: 40, left: 40 }, { top: 65, left: 15 }, { top: 65, left: 65 }],
+        6: [{ top: 15, left: 15 }, { top: 15, left: 40 }, { top: 15, left: 65 }, { top: 65, left: 15 }, { top: 65, left: 40 }, { top: 65, left: 65 }]
+    };
+    return positions[roll];
 }
 function holdDie() {
     game.holdDie();
@@ -117,4 +143,5 @@ function resetGame() {
     document.getElementById("score2").value = "";
     document.getElementById("turn").classList.remove("open");
     game.gamePlaying = true;
+    drawDieFace(1);
 }
