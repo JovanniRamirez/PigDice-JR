@@ -40,8 +40,15 @@ class Game {
             this.players[this.activePlayerIndex].score += this.roundScore;
             if (this.players[this.activePlayerIndex].score >= 100) {
                 this.gamePlaying = false;
+                this.gameWinner();
             }
         }
+    }
+    gameWinner() {
+        if (this.players[this.activePlayerIndex].score >= 100 && this.gamePlaying == false) {
+            return `${this.players[this.activePlayerIndex].name} is the winner. Game Over.`;
+        }
+        return "";
     }
 }
 let game;
@@ -50,6 +57,7 @@ window.onload = function () {
     newGameBtn.onclick = createNewGame;
     document.getElementById("roll").onclick = rollDie;
     document.getElementById("hold").onclick = holdDie;
+    document.getElementById("reset").onclick = resetGame;
 };
 function createNewGame() {
     let player1Name = document.getElementById("player1").value;
@@ -58,6 +66,7 @@ function createNewGame() {
         game = new Game(player1Name, player2Name);
         document.getElementById("turn").classList.add("open");
         document.getElementById("total").value = "0";
+        document.getElementById("die").value = "0";
         document.getElementById("player1").setAttribute("disabled", "disabled");
         document.getElementById("player2").setAttribute("disabled", "disabled");
         updateCurrentPlayerName();
@@ -75,6 +84,7 @@ function rollDie() {
     let total = game.roundScore;
     document.getElementById("die").value = currDice.toString();
     document.getElementById("total").value = total.toString();
+    updateCurrentPlayerName();
 }
 function holdDie() {
     game.holdDie();
@@ -84,11 +94,27 @@ function holdDie() {
         game.players[game.activePlayerIndex].score.toString();
     document.getElementById("total").value = "0";
     document.getElementById("die").value = "0";
-    game.changePlayers();
-    updateCurrentPlayerName();
+    let winnerMessage = game.gameWinner();
+    if (winnerMessage != "") {
+        document.getElementById("winner").textContent = winnerMessage;
+    }
+    else {
+        game.changePlayers();
+        updateCurrentPlayerName();
+    }
 }
 function updateCurrentPlayerName() {
     let currentPlayerName = game.players[game.activePlayerIndex].name;
     let currentPlayerSpan = document.getElementById("current");
     currentPlayerSpan.innerText = currentPlayerName;
+}
+function resetGame() {
+    document.getElementById("player1").removeAttribute("disabled");
+    document.getElementById("player2").removeAttribute("disabled");
+    document.getElementById("player1").value = "";
+    document.getElementById("player2").value = "";
+    document.getElementById("score1").value = "";
+    document.getElementById("score2").value = "";
+    document.getElementById("turn").classList.remove("open");
+    game.gamePlaying = true;
 }

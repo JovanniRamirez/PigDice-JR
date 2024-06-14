@@ -64,8 +64,16 @@ class Game {
             
             if (this.players[this.activePlayerIndex].score >= 100) {
                 this.gamePlaying = false;
+                this.gameWinner();
             }
         }
+    }
+
+    gameWinner(): string {
+        if (this.players[this.activePlayerIndex].score >= 100 && this.gamePlaying == false) {
+            return `${this.players[this.activePlayerIndex].name} is the winner. Game Over.`;
+        }
+        return "";
     }
 }
 
@@ -78,6 +86,8 @@ window.onload = function(){
     (<HTMLButtonElement>document.getElementById("roll")).onclick = rollDie;
 
     (<HTMLButtonElement>document.getElementById("hold")).onclick = holdDie;
+
+    (<HTMLButtonElement>document.getElementById("reset")).onclick = resetGame;
 }
 
 function createNewGame(){
@@ -94,6 +104,7 @@ function createNewGame(){
         game = new Game(player1Name, player2Name);
         (<HTMLElement>document.getElementById("turn")).classList.add("open");
         (<HTMLInputElement>document.getElementById("total")).value = "0";
+        (<HTMLInputElement>document.getElementById("die")).value = "0";
         //lock in player names and then change players
         (<HTMLInputElement>document.getElementById("player1")).setAttribute("disabled", "disabled");
         (<HTMLInputElement>document.getElementById("player2")).setAttribute("disabled", "disabled");
@@ -119,6 +130,7 @@ function rollDie():void{
     let total = game.roundScore;
     (<HTMLInputElement>document.getElementById("die")).value = currDice.toString();
     (<HTMLInputElement>document.getElementById("total")).value = total.toString();
+    updateCurrentPlayerName(); 
 }
 
 function holdDie():void{
@@ -136,9 +148,19 @@ function holdDie():void{
     //reset the turn total to 0
     (<HTMLInputElement>document.getElementById("total")).value = "0";
     (<HTMLInputElement>document.getElementById("die")).value = "0";
-    //change players
-    game.changePlayers();
-    updateCurrentPlayerName();
+    
+    let winnerMessage = game.gameWinner();
+    if (winnerMessage != "") {
+        document.getElementById("winner").textContent = winnerMessage;
+    }
+    else{
+        //change players
+        game.changePlayers();
+        updateCurrentPlayerName();
+    }
+    
+    
+    
 }
 
 function updateCurrentPlayerName(): void {
@@ -148,4 +170,21 @@ function updateCurrentPlayerName(): void {
     // Update the current player's name in the span
     let currentPlayerSpan = document.getElementById("current") as HTMLElement;
     currentPlayerSpan.innerText = currentPlayerName;
+}
+
+function resetGame() {
+    //Remove Attribute disable for names
+    (<HTMLInputElement>document.getElementById("player1")).removeAttribute("disabled");
+    (<HTMLInputElement>document.getElementById("player2")).removeAttribute("disabled");
+
+    //Clear Player name input text
+    (<HTMLInputElement>document.getElementById("player1")).value = "";
+    (<HTMLInputElement>document.getElementById("player2")).value = "";
+
+    (<HTMLInputElement>document.getElementById("score1")).value = "";
+    (<HTMLInputElement>document.getElementById("score2")).value = "";
+
+    (<HTMLElement>document.getElementById("turn")).classList.remove("open");
+
+    game.gamePlaying = true;
 }
