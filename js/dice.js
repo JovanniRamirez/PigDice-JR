@@ -3,9 +3,6 @@ class Player {
         this.name = name;
         this.score = 0;
     }
-    getScore() {
-        return this.score;
-    }
 }
 class Game {
     constructor(player1Name, player2Name) {
@@ -46,13 +43,6 @@ class Game {
             }
         }
     }
-    updateRoundScoreUI() {
-        document.getElementById("total").value = this.roundScore.toString();
-    }
-    updateTotalScoreUI() {
-        document.getElementById("score" + (this.activePlayerIndex + 1)).value =
-            this.players[this.activePlayerIndex].score.toString();
-    }
 }
 let game;
 let player;
@@ -92,6 +82,9 @@ function holdDie() {
     game.holdDie();
     let currTotal = game.roundScore;
     let currPlayer = game.activePlayerIndex;
-    let playerScoreId = document.getElementById("score" + (currPlayer + 1)).value;
-    playerScoreId = player.score.toString();
+    document.getElementById("score" + (currPlayer + 1)).value =
+        game.players[game.activePlayerIndex].score.toString();
+    document.getElementById("total").value = "0";
+    document.getElementById("die").value = "0";
+    game.changePlayers();
 }

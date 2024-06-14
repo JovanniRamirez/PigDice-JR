@@ -6,10 +6,6 @@ class Player {
         this.name = name;
         this.score = 0;
     }
-
-    getScore(){
-        return this.score;
-    }
 }
 
 class Game {
@@ -46,9 +42,7 @@ class Game {
             this.activePlayerIndex = 0;
         }
         //Reset the round score to 0
-        this.roundScore = 0;
-
-        
+        this.roundScore = 0;        
     }
 
     rollDie(): void {
@@ -72,15 +66,6 @@ class Game {
                 this.gamePlaying = false;
             }
         }
-    }
-
-    updateRoundScoreUI(): void{
-        (<HTMLInputElement>document.getElementById("total")).value = this.roundScore.toString();
-    }
-
-    updateTotalScoreUI(): void{
-        (<HTMLInputElement>document.getElementById("score" + (this.activePlayerIndex + 1))).value =
-            this.players[this.activePlayerIndex].score.toString();
     }
 }
 
@@ -149,10 +134,11 @@ function holdDie():void{
     let currPlayer = game.activePlayerIndex;
     
     //add the current turn total to the player's total score
-    let playerScoreId = (<HTMLInputElement>document.getElementById("score" + (currPlayer + 1))).value
-    playerScoreId = player.score.toString();
+    (<HTMLInputElement>document.getElementById("score" + (currPlayer + 1))).value =
+            game.players[game.activePlayerIndex].score.toString();
     //reset the turn total to 0
-
+    (<HTMLInputElement>document.getElementById("total")).value = "0";
+    (<HTMLInputElement>document.getElementById("die")).value = "0";
     //change players
-    //changePlayers();
+    game.changePlayers();
 }
